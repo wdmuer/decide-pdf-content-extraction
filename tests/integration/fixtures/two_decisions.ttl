@@ -1,0 +1,27 @@
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix dct:  <http://purl.org/dc/terms/> .
+@prefix task: <http://redpencil.data.gift/vocabularies/tasks/> .
+@prefix nfo:  <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#> .
+@prefix nie:  <http://www.semanticdesktop.org/ontologies/2007/01/19/nie#> .
+@prefix mu:   <http://mu.semte.ch/vocabularies/core/> .
+
+<http://example.org/test/task/two-decisions>
+    a task:Task ;
+    mu:uuid "test-task-two-decisions" ;
+    adms:status <http://redpencil.data.gift/id/concept/JobStatus/scheduled> ;
+    task:operation <http://lblod.data.gift/id/jobs/concept/TaskOperation/pdf-to-eli> ;
+    dct:isPartOf <http://example.org/test/job/two-decisions> ;
+    task:inputContainer <http://example.org/test/container/two-decisions> .
+
+<http://example.org/test/container/two-decisions>
+    a nfo:DataContainer ;
+    mu:uuid "test-container-two-decisions" ;
+    task:hasHarvestingCollection <http://example.org/test/collection/two-decisions> .
+
+<http://example.org/test/collection/two-decisions>
+    dct:hasPart <http://example.org/test/remote/two-decisions> .
+
+<http://example.org/test/remote/two-decisions>
+    a nfo:RemoteDataObject ;
+    mu:uuid "test-remote-two-decisions" ;
+    nie:url <http://127.0.0.1:8000/two-decisions.pdf> .

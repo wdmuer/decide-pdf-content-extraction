@@ -1,0 +1,35 @@
+services:
+  # Task.from_uri in decide-ai-service-base queries without a GRAPH clause, relying
+  # on sparql-parser to inject graphs in production. There is no sparql-parser here,
+  # so this works only because this image unions the named graphs into the default
+  # graph. Changing the version can break every task with "Task with uri ... not found".
+  virtuoso:
+    image: redpencil/virtuoso:1.4.0
+    environment:
+      SPARQL_UPDATE: "true"
+
+  tika:
+    image: lblod/apache-tika-service:0.0.3
+
+  tests:
+    image: ${TEST_IMAGE:?set TEST_IMAGE to the tag built by the workflow}
+    depends_on:
+      - virtuoso
+      - tika
+    working_dir: /app
+    environment:
+      MU_SPARQL_ENDPOINT: http://virtuoso:8890/sparql
+      MU_SPARQL_UPDATEPOINT: http://virtuoso:8890/sparql
+      MU_SPARQL_TIMEOUT: "120"
+      CONFIG_PATH: /config/config.json
+      COMPOSE_SERVICE: pdf-content
+      ALLOW_MU_AUTH_SUDO: "true"
+      APACHE_TIKA_URL: http://tika:9998/tika
+      MOUNTED_SHARE_FOLDER: /tmp/share
+    volumes:
+      - ./tests:/app/tests:ro
+      - ./pytest.ini:/app/pytest.ini:ro
+      - ./config.json:/config/config.json:ro
+    # /app holds a pyproject.toml; without --no-project uv builds an empty venv
+    # there instead of using the image's.
+    command: ["uv", "run", "--no-project", "python", "-m", "pytest"]
