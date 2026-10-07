@@ -26,4 +26,4 @@
 <http://example.org/test/remote/split-disabled>
     a nfo:RemoteDataObject ;
     mu:uuid "test-remote-split-disabled" ;
-    nie:url <http://127.0.0.1:8000/split-disabled.pdf> .
+    nie:url <http://127.0.0.1:8000/two-decisions.pdf?split=false> .

@@ -9,7 +9,7 @@ import pytest
 import requests
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
 
-from .pdf import write_pdf
+from .tasks import FIXTURES
 
 ENDPOINT = os.environ["MU_SPARQL_ENDPOINT"]
 TIKA_URL = os.environ["APACHE_TIKA_URL"]
@@ -45,18 +45,12 @@ def tika():
 
 
 @pytest.fixture(scope="session")
-def pdf_site(tmp_path_factory):
-    """Serve PDFs on 127.0.0.1:8000; ``publish(name, pages)`` writes one and returns its URL."""
-    root = tmp_path_factory.mktemp("site")
-    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=root)
+def pdf_site():
+    """Serve the fixtures directory on 127.0.0.1:8000, where the task downloads the PDFs from."""
+    handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory=FIXTURES)
     server = http.server.ThreadingHTTPServer(("127.0.0.1", SITE_PORT), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
-
-    def publish(name: str, pages: list[list[str]]) -> str:
-        write_pdf(root / name, pages)
-        return f"http://127.0.0.1:{SITE_PORT}/{name}"
-
-    yield publish
+    yield
     server.shutdown()
 
 

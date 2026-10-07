@@ -2,11 +2,11 @@ import json
 
 from . import tasks
 
-HEADER = "Gemeenteraad Gent - zitting van 1 september 2026"
-TITLE_1 = "Besluit 1: Aanleg fietspad Kerkstraat"
-BODY_1 = "De gemeenteraad keurt de aanleg van een fietspad in de Kerkstraat goed."
-TITLE_2 = "Besluit 2: Renovatie stadhuis"
-BODY_2 = "De gemeenteraad keurt de renovatie van het stadhuis goed."
+HEADER = "Testdocument met fictieve besluiten"
+TITLE_1 = "Besluit 1: Eerste testbesluit"
+BODY_1 = "Dit is de tekst van het eerste fictieve besluit."
+TITLE_2 = "Besluit 2: Tweede testbesluit"
+BODY_2 = "Dit is de tekst van het tweede fictieve besluit."
 NLD = "http://publications.europa.eu/resource/authority/language/NLD"
 SKIPPED = "http://mu.semte.ch/vocabularies/ext/skippedDueToPageLimit"
 
@@ -22,7 +22,7 @@ BOTH_TITLES = json.dumps({
 
 def test_a_pdf_with_two_decision_titles_becomes_two_expressions(pdf_site, stub_llm):
     stub_llm(BOTH_TITLES)
-    url = pdf_site("two-decisions.pdf", [[HEADER, TITLE_1, BODY_1, TITLE_2, BODY_2]])
+    url = "http://127.0.0.1:8000/two-decisions.pdf"
     task_uri = "http://example.org/test/task/two-decisions"
     tasks.seed("two_decisions")
 
@@ -49,7 +49,7 @@ def test_a_pdf_with_two_decision_titles_becomes_two_expressions(pdf_site, stub_l
 
 def test_splitting_disabled_keeps_the_document_as_one_expression(pdf_site, stub_llm):
     stub_llm(BOTH_TITLES)
-    url = pdf_site("split-disabled.pdf", [[HEADER, TITLE_1, BODY_1, TITLE_2, BODY_2]])
+    url = "http://127.0.0.1:8000/two-decisions.pdf?split=false"
     task_uri = "http://example.org/test/task/split-disabled"
     tasks.seed("split_disabled")
 
@@ -66,7 +66,7 @@ def test_splitting_disabled_keeps_the_document_as_one_expression(pdf_site, stub_
 
 def test_a_pdf_over_the_page_limit_is_only_recorded_as_skipped(pdf_site, stub_llm):
     stub_llm("{}")
-    url = pdf_site("long-pdf.pdf", [[HEADER]] + [[f"Pagina {n}"] for n in range(2, 12)])
+    url = "http://127.0.0.1:8000/long-pdf.pdf"
     task_uri = "http://example.org/test/task/long-pdf"
     tasks.seed("long_pdf")
 

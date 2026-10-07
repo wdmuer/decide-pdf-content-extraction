@@ -19,7 +19,7 @@ SELECT ?message WHERE {
 
 
 def test_a_pdf_that_cannot_be_downloaded_fails_the_task_and_logs_an_error(pdf_site, stub_llm):
-    # pdf_site is requested only so the server runs and answers 404 for the unpublished PDF.
+    # pdf_site is requested only so the server runs and answers 404 for the missing PDF.
     stub_llm("{}")
     tasks.seed("missing_pdf")
 
