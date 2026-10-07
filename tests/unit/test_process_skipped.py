@@ -61,6 +61,7 @@ def test_normal_pdf_runs_full_pipeline(task):
          patch.object(task, "create_eli_work", return_value="http://work/1"), \
          patch.object(task, "create_title_annotation", return_value="http://title/1"), \
          patch.object(task, "create_output_container", return_value="http://container/1"), \
+         patch.object(task, "create_target_shape"), \
          patch.object(task, "split_decisions", return_value=[{"text": "decision text", "title": "T", "title_start": 0, "title_end": 1}]), \
          patch("src.task.get_segmentor"), \
          patch("src.task.langdetect.detect", return_value="nl"):
@@ -94,6 +95,7 @@ def test_normal_pdf_logs_ai_call(task):
          patch.object(task, "create_eli_work", return_value="http://work/1"), \
          patch.object(task, "create_title_annotation", return_value="http://title/1"), \
          patch.object(task, "create_output_container", return_value="http://container/1"), \
+         patch.object(task, "create_target_shape"), \
          patch("src.LLMAnalyzer.init_chat_model") as mock_init, \
          patch("src.segmentors.SpanAligner.map_tags_to_original", return_value="<title>TITLE TEXT</title> body"), \
          patch("src.segmentors.SpanAligner.get_annotations_from_tagged_text", return_value={
